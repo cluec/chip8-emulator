@@ -232,6 +232,7 @@ void Chip8::emulateCycle(){
                     break;
 
             }
+            break;
         case 0x9000:// (9XY0) skips next if instruction if VX != VY
             if (V[(opcode & 0x0F00) >> 8] != V[(opcode & 0x00F0) >> 4]){
                 pc+=2;
@@ -243,7 +244,7 @@ void Chip8::emulateCycle(){
             pc+=2;
             break;
         case 0xB000:// (BNNN) PC = V0 + NNN
-            pc = (opcode & 0x0FFF + V[0]);
+            pc = (opcode & 0x0FFF) + V[0];
             pc+=2;
             break;
         case 0xC000:// (CXNN) VX = rand()&NN
@@ -274,34 +275,55 @@ void Chip8::emulateCycle(){
         case 0xE000:
             switch (opcode & 0x000F){
                 case 0x000E:// (EX9E) if key() == VX skip next instruction
-                    if (key[(opcode & 0x0f00) >> 8] == 1){
+                    if (key[V[(opcode & 0x0f00) >> 8]] == 1){
                         pc+=2;
                     }
                     pc+=2;
                     break;
                 case 0x0001:// (EXA1) if key() != VX skip next instruction
+                    if (key[V[(opcode & 0x0f00) >> 8]] == 0){
+                        pc+=2;
+                    }
                     pc+=2;
                     break;
             }
         case 0xF000:
             switch (opcode & 0x00FF){
                 case 0x0007:// (FX07) vx = delay timer
-                    V[opcode & 0x0F00 >> 8] = delay_timer;
+                    V[(opcode & 0x0F00) >> 8] = delay_timer;
                     pc+=2;
                     break;
-                case 0x000A:// (FX0A) key press stored in VX
-                    pc+=2;
+                case 0x000A:// (FX0A) CHANGE THIS ONEEE
+                    {
+					bool keyPress = false;
+
+					for(int i = 0; i < 16; ++i)
+					{
+						if(key[i] != 0)
+						{
+							V[(opcode & 0x0F00) >> 8] = i;
+							keyPress = true;
+						}
+					}
+
+					// If we didn't received a keypress, skip this cycle and try again.
+					if(!keyPress)						
+						return;
+
+					pc += 2;					
+				}
+                    
                     break;
                 case 0x0015:// (FX15) delay timer = vx
-                    delay_timer = V[opcode & 0x0F00 >> 8];
+                    delay_timer = V[(opcode & 0x0F00) >> 8];
                     pc+=2;
                     break;
                 case 0x0018:// (FX18)
-                    sound_timer = V[opcode & 0x0F00 >> 8];
+                    sound_timer = V[(opcode & 0x0F00)>> 8];
                     pc+=2;
                     break;
                 case 0x001E:// (FX1E)
-                    index += (V[opcode & 0x0F00 >> 8]);
+                    index += (V[(opcode & 0x0F00) >> 8]);
                     pc+=2;
                     break;
                 case 0x0029:// (FX29)
