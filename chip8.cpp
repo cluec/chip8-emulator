@@ -201,13 +201,14 @@ void Chip8::emulateCycle(){
                 }
                     break;
                 case 0x0005: //(8XY5) Subtract register VY from VX. Set carry flag
-                    V[(opcode & 0x0F00) >> 8]= (V[(opcode & 0x0F00) >> 8] - V[(opcode & 0x00F0) >> 4]);
+                    
                     if (V[(opcode & 0x0F00) >> 8] > V[(opcode & 0x00F0) >> 4]){
                         V[15] = 1;
                     }
                     else{
                         V[15] = 0;
                     }
+                    V[(opcode & 0x0F00) >> 8]= (V[(opcode & 0x0F00) >> 8] - V[(opcode & 0x00F0) >> 4]);
                     pc+=2;
                     break;	
                 case 0x0006:// 8XY6 Store the least significant bit of VX in VF then shift right 1
@@ -216,17 +217,18 @@ void Chip8::emulateCycle(){
                     pc+=2;
                     break;
                 case 0x0007:// (8XY7) VX = VY - VX 
-                    V[(opcode & 0x0F00) >> 8]= (V[(opcode & 0x00F0) >> 8] - V[(opcode & 0x0F00) >> 4]);
+                    
                     if (V[(opcode & 0x0F00) >> 8] > V[(opcode & 0x00F0) >> 4]){
                         V[15] = 0;
                     }
                     else{
                         V[15] = 1;
                     }
+                    V[(opcode & 0x0F00) >> 8]= (V[(opcode & 0x00F0) >> 8] - V[(opcode & 0x0F00) >> 4]);
                     pc+=2;
                     break;	
                 case 0x000E:// 8XYE Store the most significant bit of VX in VF then shift left 1
-                    V[15] = (V[(opcode & 0x0F00) >> 8] & 0x80);
+                    V[15] = ((V[(opcode & 0x0F00) >> 8] & 0x80) >> 7);
                     V[(opcode & 0x0F00) >> 8] = (V[(opcode & 0x0F00) >> 8] << 1);
                     pc+=2;
                     break;
