@@ -48,6 +48,7 @@ void Chip8::initialize(){
     // clear display
     for (int i = 0; i < 2048; i++){
         gfx[i] = 0;
+        oldGfx[i] = 0;
     }
 
     // clear stack
@@ -116,7 +117,7 @@ void Chip8::emulateCycle(){
     // fetch opcode
     // opcodes are two bytes
     opcode = memory[pc] << 8 |memory[pc + 1];
-    printf("%x\n", opcode);
+    //printf("%x\n", opcode);
     switch(opcode & 0xf000){
         case 0x0000: //00E0 or 00EE
             switch(opcode & 0x000f){
@@ -202,7 +203,7 @@ void Chip8::emulateCycle(){
                     break;
                 case 0x0005: //(8XY5) Subtract register VY from VX. Set carry flag
                     
-                    if (V[(opcode & 0x0F00) >> 8] > V[(opcode & 0x00F0) >> 4]){
+                    if (V[(opcode & 0x0F00) >> 8] >= V[(opcode & 0x00F0) >> 4]){
                         V[15] = 1;
                     }
                     else{
@@ -224,7 +225,7 @@ void Chip8::emulateCycle(){
                     else{
                         V[15] = 1;
                     }
-                    V[(opcode & 0x0F00) >> 8]= (V[(opcode & 0x00F0) >> 8] - V[(opcode & 0x0F00) >> 4]);
+                    V[(opcode & 0x0F00) >> 8]= (V[(opcode & 0x00f0) >> 4] - V[(opcode & 0x0F00) >> 8]);
                     pc+=2;
                     break;	
                 case 0x000E:// 8XYE Store the most significant bit of VX in VF then shift left 1
@@ -250,7 +251,9 @@ void Chip8::emulateCycle(){
             pc+=2;
             break;
         case 0xC000:// (CXNN) VX = rand()&NN
-            V[(opcode & 0x0f00) >> 8] = (rand() & (opcode & 0x00ff));
+            V[(opcode & 0x0f00) >> 8] = (rand()%0xff & (opcode & 0x00ff));
+            pc+=2;
+            break;
         case 0xD000:// (DXYN) Draw a sprite at coordinate (VX, VY)
                     // N is the height of the sprite
                     // The sprite is 8 bits wide
@@ -352,6 +355,12 @@ void Chip8::emulateCycle(){
                     break;
             }
 
+    }
+    if(delay_timer > 0){
+        delay_timer--;
+    }
+    if(sound_timer > 0){
+        sound_timer--;
     }
 
 }

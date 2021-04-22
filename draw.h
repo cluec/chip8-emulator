@@ -9,8 +9,10 @@ class Draw{
         ~Draw();
         void initialize();
         void drawPixel(int x, int y);
+        void clearPixel(int x, int y);
         void loop();
-        void drawWindow(unsigned char gfx[]);
+        void drawWindow(unsigned char gfx[],unsigned char oldGfx[]);
+        void getInput(unsigned char key[]);
     private:
         SDL_Event event;
         SDL_Renderer *renderer;

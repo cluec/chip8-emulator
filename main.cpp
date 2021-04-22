@@ -9,14 +9,15 @@ int main(int argv, char** args) {
     Chip8 my_Chip8;
     Draw window(20);
     my_Chip8.initialize();
-    my_Chip8.load("roms\\BC_test.ch8");
+    my_Chip8.load("roms\\pong.c8");
     window.initialize();
-    for (int i = 0; i <100000; i++){
+    while (1){
         my_Chip8.emulateCycle();
         if (my_Chip8.drawFlag){
-            window.drawWindow(my_Chip8.gfx);
+            window.drawWindow(my_Chip8.gfx, my_Chip8.oldGfx);
             my_Chip8.drawFlag = false;
         }
+        window.getInput(my_Chip8.key);
     }
     
     printf("pogchamp\n");

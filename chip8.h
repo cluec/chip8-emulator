@@ -15,6 +15,8 @@ class Chip8{
         void emulateCycle();
         bool drawFlag;
         unsigned char gfx[64 * 32];
+        unsigned char oldGfx[64 * 32];
+        unsigned char key[16];
     private:
         unsigned short opcode;       // opcodes are two byes
         unsigned char memory[MEMORYSIZE];  // 4k memory
@@ -27,7 +29,7 @@ class Chip8{
         unsigned short stack[16];
         unsigned char stackp;
         
-        unsigned char key[16];
+        
 };
 
 
