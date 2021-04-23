@@ -17,6 +17,8 @@ class Chip8{
         unsigned char gfx[64 * 32];
         unsigned char oldGfx[64 * 32];
         unsigned char key[16];
+        unsigned char delay_timer;
+        unsigned char sound_timer;
     private:
         unsigned short opcode;       // opcodes are two byes
         unsigned char memory[MEMORYSIZE];  // 4k memory
@@ -24,8 +26,7 @@ class Chip8{
         unsigned short index;        //index register 12 bits
         unsigned short pc;           //program counter 12 bits
         
-        unsigned char delay_timer;
-        unsigned char sound_timer;
+        
         unsigned short stack[16];
         unsigned char stackp;
         

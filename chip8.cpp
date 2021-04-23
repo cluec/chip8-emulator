@@ -251,7 +251,7 @@ void Chip8::emulateCycle(){
             pc+=2;
             break;
         case 0xC000:// (CXNN) VX = rand()&NN
-            V[(opcode & 0x0f00) >> 8] = (rand()%0xff & (opcode & 0x00ff));
+            V[(opcode & 0x0f00) >> 8] = (rand() & (opcode & 0x00ff));
             pc+=2;
             break;
         case 0xD000:// (DXYN) Draw a sprite at coordinate (VX, VY)
@@ -356,11 +356,6 @@ void Chip8::emulateCycle(){
             }
 
     }
-    if(delay_timer > 0){
-        delay_timer--;
-    }
-    if(sound_timer > 0){
-        sound_timer--;
-    }
+    
 
 }

@@ -48,7 +48,7 @@ void Draw::drawWindow(unsigned char gfx[], unsigned char oldGfx[]){
         int y = i/64;
         //printf("%d", gfx[i]);
         
-        if(gfx[i] == 1 && oldGfx[i] == 0){
+        if(gfx[i] == 1 ){
             drawPixel(x,y);
         }
         else if(gfx[i] == 0 && oldGfx[i] == 1){
