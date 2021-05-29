@@ -71,7 +71,7 @@ void Chip8::initialize(){
     srand(time(0));
 
 }
-
+// loads a chip8 file into memory
 bool Chip8::load(const char *fname){
     //open the game file
     FILE *game = fopen(fname, "rb");
@@ -298,25 +298,20 @@ void Chip8::emulateCycle(){
                     V[(opcode & 0x0F00) >> 8] = delay_timer;
                     pc+=2;
                     break;
-                case 0x000A:// (FX0A) CHANGE THIS ONEEE
-                    {
+                case 0x000A:// (FX0A) awaits a keypress
 					bool keyPress = false;
 
-					for(int i = 0; i < 16; ++i)
-					{
-						if(key[i] != 0)
-						{
+					for(int i = 0; i < 16; i++){
+						if(key[i] != 0){
 							V[(opcode & 0x0F00) >> 8] = i;
 							keyPress = true;
 						}
 					}
 
-					// If we didn't received a keypress, skip this cycle and try again.
+					// No keypress so do the same instruction again until a key is pressed
 					if(!keyPress)						
 						return;
-
 					pc += 2;					
-				}
                     
                     break;
                 case 0x0015:// (FX15) delay timer = vx
