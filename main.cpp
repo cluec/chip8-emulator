@@ -14,7 +14,7 @@ int main(int argv, char** args) {
     Chip8 my_Chip8;
     Draw window(20);
     my_Chip8.initialize();
-    my_Chip8.load("roms\\tetris.c8");
+    my_Chip8.load("roms\\pong.c8");
     window.initialize();
     double cycles = 0;
     double instructions = 0;
@@ -25,10 +25,7 @@ int main(int argv, char** args) {
         double curTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
         
         cycles += (curTime - lastTime) * (clockspeed/1000.0);
-        //printf("cycles: %f\n", (curTime - lastTime));
-        //printf("%d\n", (curInstr - instructions)/(curTime - lastTime));
         lastTime = curTime;
-        //printf("%f\n", (int)(clockspeed/60));
         if (curInstr - instructions > (clockspeed/60)){
             if(my_Chip8.delay_timer > 0){
                 my_Chip8.delay_timer--;
@@ -46,7 +43,6 @@ int main(int argv, char** args) {
                 window.drawWindow(my_Chip8.gfx, my_Chip8.oldGfx);
                 my_Chip8.drawFlag = false;
             }
-            //window.getInput(my_Chip8.key);
         }
         else{
             Sleep(16);
@@ -56,8 +52,6 @@ int main(int argv, char** args) {
         
         
     }
-    
-    printf("pogchamp\n");
     
     return 0;
     
